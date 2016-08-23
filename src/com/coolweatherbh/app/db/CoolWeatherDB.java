@@ -101,8 +101,9 @@ public class CoolWeatherDB {
 	 */
 	public List<City> loadCities(int provinceId) {
 		List<City> list = new ArrayList<City>();
-		Cursor cursor = db.query("City", null, "provinceId = ?",
+		Cursor cursor = db.query("City", null, "province_id = ?",
 				new String[] { String.valueOf(provinceId) }, null, null, null);
+		// 是province_id,不是provinceId,数据库表格的字段一般有下划线标识
 		if (cursor.moveToFirst()) {
 			do {
 				City city = new City();
@@ -137,7 +138,7 @@ public class CoolWeatherDB {
 	/**
 	 * 从数据库读取某城市下所有的县信息
 	 */
-	public List<County> loadCountIes(int cityId) {
+	public List<County> loadCounties(int cityId) {
 		List<County> list = new ArrayList<County>();
 		Cursor cursor = db.query("County", null, "city_id=?",
 				new String[] { String.valueOf(cityId) }, null, null, null);
