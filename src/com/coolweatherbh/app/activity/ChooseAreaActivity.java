@@ -298,6 +298,7 @@ public class ChooseAreaActivity extends Activity {
 				Intent intent=new Intent(this,WeatherActivity.class);
 				startActivity(intent);
 			}
+			finish();
 		}
 	}
 }

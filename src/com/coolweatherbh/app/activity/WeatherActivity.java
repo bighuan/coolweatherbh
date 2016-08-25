@@ -1,6 +1,7 @@
 package com.coolweatherbh.app.activity;
 
 import com.coolweatherbh.app.R;
+import com.coolweatherbh.app.service.AutoUpdateService;
 import com.coolweatherbh.app.util.HttpCallbackListener;
 import com.coolweatherbh.app.util.HttpUtil;
 import com.coolweatherbh.app.util.Utility;
@@ -20,7 +21,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class WeatherActivity extends Activity implements OnClickListener{
+public class WeatherActivity extends Activity implements OnClickListener {
 
 	private LinearLayout weatherInfoLayout;
 
@@ -53,7 +54,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	 * 用于显示当前日期
 	 */
 	private TextView currentDateText;
-	
+
 	/**
 	 * 切换城市的按钮
 	 */
@@ -63,6 +64,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	 * 更新天气的按钮
 	 */
 	private Button refreshWeather;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,9 +78,9 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		temp1Text = (TextView) findViewById(R.id.temp1);
 		temp2Text = (TextView) findViewById(R.id.temp2);
 		currentDateText = (TextView) findViewById(R.id.current_date);
-		switchCity=(Button) findViewById(R.id.switch_city);
-		refreshWeather=(Button) findViewById(R.id.refresh_weather);
-		//设置点击事件
+		switchCity = (Button) findViewById(R.id.switch_city);
+		refreshWeather = (Button) findViewById(R.id.refresh_weather);
+		// 设置点击事件
 		switchCity.setOnClickListener(this);
 		refreshWeather.setOnClickListener(this);
 		// 获取县级代号
@@ -171,30 +173,34 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		currentDateText.setText(prefs.getString("current_date", ""));
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
+		//激活AutoUpdateService这个服务
+		Intent intent = new Intent(this, AutoUpdateService.class);
+		startService(intent);
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.switch_city:
-			Intent intent=new Intent(this,ChooseAreaActivity.class);
+			Intent intent = new Intent(this, ChooseAreaActivity.class);
 			intent.putExtra("from_weather_activity", true);
 			startActivity(intent);
 			finish();
 			break;
-			
+
 		case R.id.refresh_weather:
 			publishText.setText("同步中...");
-			SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
-			String weatherCode=prefs.getString("weather_code", "");
-			if (!TextUtils.isEmpty(weatherCode)){
+			SharedPreferences prefs = PreferenceManager
+					.getDefaultSharedPreferences(this);
+			String weatherCode = prefs.getString("weather_code", "");
+			if (!TextUtils.isEmpty(weatherCode)) {
 				queryWeatherInfo(weatherCode);
 			}
 			break;
 		default:
 			break;
 		}
-		
+
 	}
 
 }
